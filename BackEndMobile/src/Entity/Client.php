@@ -34,14 +34,14 @@ class Client
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message = " le champ telephone du client emmetteur est nul !")
-     * @Assert\Regex(pattern="#^(70|75|76|77|78)[0-9]{7}$#", message= "numero de telephone incorrect")
+     * @Assert\Regex(pattern="^(70|75|76|77|78)[0-9]{7}$", message= "numero de telephone incorrect")
      * @Groups({"transactionByCode"})
      */
     private $telephone;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Assert\Regex(pattern="#^(1|2)[0-9]{12}$#", message= "CNI incorrect")
+     * @Assert\Regex(pattern="^(1|2)[0-9]{12}$", message= "CNI incorrect")
      * @Groups({"transactionByCode"})
      */
     private $cni;

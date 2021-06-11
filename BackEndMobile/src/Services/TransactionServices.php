@@ -161,6 +161,7 @@ class TransactionServices{
     if (empty($transaction)) {
             return $transaction;
     }
+    dd("test");
     $data = $request->toArray();
     $montant= $transaction->getMontant();
     $solde=$transaction->getCompte()->getSolde()-$montant;
@@ -211,7 +212,7 @@ class TransactionServices{
         
         $transaction = $this->transactionRepository->find($id);
         if (($transaction->getDateRetrait())!==NULL) {
-            return $transaction;
+            return "déjà retiré";
         }
         $userRetrait= $this->userRepository->find($idUser);
         $clientRetrait = $transaction->getClientRetrait();

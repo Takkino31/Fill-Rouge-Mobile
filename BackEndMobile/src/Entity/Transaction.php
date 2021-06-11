@@ -36,6 +36,14 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
  *              "method"="GET",
  *              "path"="/api/user/transactions/retrait"
  *          },
+ *          "transactionsUsersAgence"={
+ *              "method"="GET",
+ *              "path"="/api/usersagence/transactions"
+ *          },
+ *          "getTransactionPeriodeUser"={
+ *              "method"="GET",
+ *              "path"="/api/admin/usersagence/{dateDebut}/{dateFin}"
+ *          },
  *          "transactionDepot"={
  *              "method"="POST",
  *              "path"="/api/admin/user/transactions"
@@ -65,19 +73,19 @@ class Transaction
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"transactionByCode","UserDepot","UserRetrait"})
+     * @Groups({"transactionByCode","UserDepot","UserRetrait","usersAgencesDepot","usersAgencesRetrait"})
      */
     private $montant;
 
     /**
      * @ORM\Column(type="date")
-     * @Groups({"transactionByCode","UserDepot"})
+     * @Groups({"transactionByCode","UserDepot","usersAgencesDepot"})
      */
     private $dateDepot;
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups({"UserRetrait"})
+     * @Groups({"UserRetrait","usersAgencesRetrait"})
      */
     private $dateRetrait;
 
@@ -138,6 +146,7 @@ class Transaction
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="transactionsDepot")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"usersAgencesDepot"})
      */
     private $userDepot;
 
@@ -149,6 +158,7 @@ class Transaction
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="transactionsRetrait")
+     * @Groups({"usersAgencesRetrait"})
      */
     private $userRetrait;
 

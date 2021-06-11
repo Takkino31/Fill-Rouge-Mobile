@@ -22,15 +22,20 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
  *          "security_message"= "Vous n'avez pas accès à cette ressource"
  *     },
  *     collectionOperations={
- *          "findByUsername"={
+ *          "getAllUsersAgence"={
  *              "method"="GET",
- *              "path"="admin/users/{username}",
- *              "security"="is_granted('ROLE_UTILISATEUR_AGENCE')",
+ *              "path"="admin/usersagence",
+ *              "security"="is_granted('ROLE_ADMIN_AGENCE')",
  *           },
  *           "add_users"={
  *               "method"="POST",
  *               "path"="admin/users",
- *           }
+ *           },
+ *          "getSolde"={
+ *              "method"="GET",
+ *              "path"="user/solde",
+ *              "security"="is_granted('ROLE_UTILISATEUR_AGENCE')",
+ *          },
  *       },
  *     itemOperations={
  *          "get_user"={
@@ -74,11 +79,13 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"usersAgencesDepot","usersAgencesRetrait","userAgence"})
      */
     private $prenom;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"usersAgencesDepot","usersAgencesRetrait","userAgence"})
      */
     private $nom;
 

@@ -25,4 +25,13 @@ class UserController extends AbstractController
         $user = $serializer->normalize($user,"json",["groups"=>"findByUsername"]);
         return $this->json($user,Response::HTTP_OK);
     }
+
+        /**
+     * @Route("/api/users/solde", name="getSolde",methods={"GET"})
+     */
+
+    public function getSolde(){
+        $solde= $this->getUser()->getAdminAgence()->getCompte()->getSolde();
+        return $this->json($solde,Response::HTTP_OK);
+    }
 }

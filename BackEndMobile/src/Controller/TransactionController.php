@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Transaction;
+use App\Repository\UserRepository;
 use App\Services\TransactionServices;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\TransactionRepository;
@@ -80,6 +81,9 @@ class TransactionController extends AbstractController
             $this->entityManager->flush();
             return $this->json($transaction,Response::HTTP_OK);
         }
+        elseif (gettype($transaction)=="string"){
+            return $this->json($transaction,Response::HTTP_OK);
+        }
         else {
             return $this->json($transaction,Response::HTTP_BAD_REQUEST);
         }
@@ -106,4 +110,49 @@ class TransactionController extends AbstractController
         $transactionsRetrait = $serializer->normalize($transactionsRetrait,"json",["groups"=>"UserRetrait"]);
         return $this->json($transactionsRetrait,Response::HTTP_OK);
     }
+
+    /**
+     * @Route("/api/admin/usersagence", name="getAllUsersAgence",methods={"GET"})
+     */
+
+    public function getAllUsersAgence(UserRepository $userRepository,SerializerInterface $serializer){
+        $agence= $this->getUser()->getAdminAgence();
+        $users = $userRepository->findBy(["adminAgence"=>$agence]);
+        $users = $serializer->normalize($users,"json",["groups"=>"userAgence"]);
+
+        return $this->json($users,Response::HTTP_OK);
+    }
+
+    /**
+     * @Route("/api/admin/usersagence/{dateDebut}/{dateFin}", name="getTransactionPeriodeUser",methods={"GET"})
+     */
+
+    public function getTransactionPeriode($dateDebut,$dateFin){
+        dd(gettype($dateDebut));
+    }
+
+    /**
+     * @Route("/api/usersagence/transactions", name="transactionsUsersAgence",methods={"GET"})
+     */
+
+    public function getTransactionsUsersAgence(UserRepository $userRepository,SerializerInterface $serializer){
+        $agence= $this->getUser()->getAdminAgence();
+        $users = $userRepository->findBy(["adminAgence"=>$agence]);
+        $transactionsDepot= [];
+        foreach ($users as $key => $user) {
+            $transactionsDepot = $this->transactionRepository->findBy(["userDepot"=>$user]);
+            // dd($transactionsDepot);
+            $transactionsDepot = $serializer->normalize($transactionsDepot,"json",["groups"=>"usersAgencesDepot"]);
+
+            $transactionsRetrait = $this->transactionRepository->findBy(["userRetrait"=>$user]);
+            // dd($transactionsRetrait);
+            $transactionsRetrait = $serializer->normalize($transactionsRetrait,"json",["groups"=>"usersAgencesRetrait"]);
+        }
+
+        $transactions["users"]= $users;
+        $transactions["depot"]=$transactionsDepot;
+        $transactions["retrait"]=$transactionsRetrait;
+        return $this->json($transactions,Response::HTTP_OK);
+    }
+
 }
